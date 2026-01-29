@@ -36,22 +36,4 @@ Relaciona:
 - Operação
 - Criticidade
 
-Campos principais:
-- `codigo`
-- `codigo_tipo_sistema`
-- `codigo_tipo_operacao`
-- `codigo_tipo_criticidade`
-- `data_cadastro`
-- `data_agendamento`
-- `data_finalizada`
-- `descricao`
-
----
-
-## Relacionamentos
-
-- `manutencao.codigo_tipo_sistema` → `tipo_sistema.codigo`
-- `manutencao.codigo_tipo_operacao` → `tipo_operacao.codigo`
-- `manutencao.codigo_tipo_criticidade` → `tipo_criticidade.codigo`
-
 Todos os relacionamentos utilizam **chaves estrangeiras (FK)**.
