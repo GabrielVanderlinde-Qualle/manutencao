@@ -9,12 +9,3 @@ insert into tipo_operacao (nome, descricao) values
 insert into tipo_criticidade (nome, descricao) values
 ('Agendada', 'Serviço planejado'),
 ('Imediata', 'Ação urgente');
-
-insert into manutencao (
-    codigo_tipo_sistema,
-    codigo_tipo_operacao,
-    codigo_tipo_criticidade,
-    descricao
-) values (
-    1, 1, 1, 'Manutenção Planejada no sistema Alerta Sul'
-);
