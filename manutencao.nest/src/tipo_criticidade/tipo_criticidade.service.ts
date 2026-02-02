@@ -1,23 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTipoCriticidadeDto } from './dto/create-tipo_criticidade.dto';
 import { UpdateTipoCriticidadeDto } from './dto/update-tipo_criticidade.dto';
+import { Repository } from 'typeorm';
+import { TipoCriticidade } from './entities/tipo_criticidade.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TipoCriticidadeService {
+  constructor(
+    @InjectRepository(TipoCriticidade)
+    private tipoCriticidadeRepository: Repository<TipoCriticidade>,
+  ) {}
+
   create(createTipoCriticidadeDto: CreateTipoCriticidadeDto) {
-    return 'This action adds a new tipoCriticidade';
+    return this.tipoCriticidadeRepository.save(createTipoCriticidadeDto);
   }
 
   findAll() {
-    return `This action returns all tipoCriticidade`;
+    return this.tipoCriticidadeRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} tipoCriticidade`;
+    return this.tipoCriticidadeRepository.findOneBy({ codigo: id });
   }
 
-  update(id: number, updateTipoCriticidadeDto: UpdateTipoCriticidadeDto) {
-    return `This action updates a #${id} tipoCriticidade`;
+  // Atualiza no Banco de Dados
+  async update(id: number, updateTipoCriticidadeDto: UpdateTipoCriticidadeDto) {
+    // Solicita a Atualização no Banco de Dados
+    await this.tipoCriticidadeRepository.update(id, updateTipoCriticidadeDto);
+
+    // Busca o item atualizado para mostrar pro usuário
+    return this.tipoCriticidadeRepository.findOneBy({ codigo: id });
   }
 
   remove(id: number) {

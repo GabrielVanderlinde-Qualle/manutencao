@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TipoCriticidadeService } from './tipo_criticidade.service';
 import { CreateTipoCriticidadeDto } from './dto/create-tipo_criticidade.dto';
 import { UpdateTipoCriticidadeDto } from './dto/update-tipo_criticidade.dto';
 
 @Controller('tipo-criticidade')
 export class TipoCriticidadeController {
-  constructor(private readonly tipoCriticidadeService: TipoCriticidadeService) {}
+  constructor(
+    private readonly tipoCriticidadeService: TipoCriticidadeService,
+  ) {}
 
   @Post()
   create(@Body() createTipoCriticidadeDto: CreateTipoCriticidadeDto) {
@@ -23,7 +33,10 @@ export class TipoCriticidadeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTipoCriticidadeDto: UpdateTipoCriticidadeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTipoCriticidadeDto: UpdateTipoCriticidadeDto,
+  ) {
     return this.tipoCriticidadeService.update(+id, updateTipoCriticidadeDto);
   }
 
