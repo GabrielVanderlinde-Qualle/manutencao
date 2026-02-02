@@ -18,7 +18,7 @@ import { TipoCriticidadeModule } from './tipo_criticidade/tipo_criticidade.modul
       database: 'manutencao_db',
       entities: [],
       autoLoadEntities: true,
-      synchronize: false, //Tabelas já Criadas no Banco Local
+      synchronize: true,
     }),
     ManutencaoModule,
     TipoSistemaModule,
