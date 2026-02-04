@@ -34,6 +34,6 @@ export class TipoCriticidadeService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} tipoCriticidade`;
+    return this.tipoCriticidadeRepository.delete({ codigo: id });
   }
 }
