@@ -6,68 +6,86 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ManutencaoService } from './manutencao.service';
 import { CreateManutencaoDto } from './dto/create-manutencao.dto';
 import { UpdateManutencaoDto } from './dto/update-manutencao.dto';
+import { Manutencao } from './entities/manutencao.entity';
 
+@ApiTags('Manutenção') // Agrupa as rotas no Swagger
 @Controller('manutencao')
 export class ManutencaoController {
   constructor(private readonly manutencaoService: ManutencaoService) {}
 
-  // 1. Criar manutenção
+  // --- CREATE ---
   @Post()
+  @ApiOperation({ summary: 'Cria uma nova manutenção' })
+  @ApiResponse({ status: 201, description: 'Ordem criada com sucesso.', type: Manutencao })
+  @ApiResponse({ status: 400, description: 'Dados inválidos.' })
   create(@Body() createManutencaoDto: CreateManutencaoDto) {
     return this.manutencaoService.create(createManutencaoDto);
   }
 
-  // URL: http://localhost:3000/manutencao/relatorio-geral
+  // --- READ (Relatórios e Dashboards) ---
   @Get('relatorio-geral')
+  @ApiOperation({ summary: 'Gera relatório geral das manutenções' })
+  @ApiResponse({ status: 200, description: 'Relatório gerado com sucesso.' })
   getRelatorio() {
     return this.manutencaoService.gerarRelatorio();
   }
 
-  @Get('dashboard')
-  getDashboard() {
+  @Get('dashboard/sistema')
+  @ApiOperation({ summary: 'Contagem de manutenções por sistema' })
+  @ApiResponse({ status: 200, description: 'Dados agrupados retornados.' })
+  getDashboardPorSistema() {
     return this.manutencaoService.contarPorSistema();
-  }
-
-  @Get('contarSistema')
-  contarPorSistema() {
-    return this.manutencaoService.contarPorSistema();
-  }
-
-  // 2. Listar todas (padrão)
-  @Get('listar-todas')
-  findAll() {
-    return this.manutencaoService.findAll();
   }
 
   @Get('pendentes')
+  @ApiOperation({ summary: 'Lista apenas manutenções pendentes' })
+  @ApiResponse({ status: 200, description: 'Lista retornada com sucesso.' })
   manutencoesPendentes() {
     return this.manutencaoService.manutencoesPendentes();
   }
 
-  //3. Buscar uma manutenção pelo ID
-  @Get('id')
-  findOne(@Param('id') id: string) {
-    return this.manutencaoService.findOne(+id);
+  // --- READ (CRUD Padrão) ---
+  @Get()
+  @ApiOperation({ summary: 'Lista todas as manutenções' })
+  @ApiResponse({ status: 200, description: 'Lista completa retornada.' })
+  findAll() {
+    return this.manutencaoService.findAll();
   }
 
-  // Atualzar Manutenção
+  @Get(':id')
+  @ApiOperation({ summary: 'Busca uma manutenção pelo ID' })
+  @ApiParam({ name: 'id', description: 'ID da manutenção', example: 1 })
+  @ApiResponse({ status: 200, description: 'Manutenção encontrada.' })
+  @ApiResponse({ status: 404, description: 'Manutenção não encontrada.' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    // ParseIntPipe converte automaticamente "1" (string) para 1 (number)
+    return this.manutencaoService.findOne(id);
+  }
+
+  // --- UPDATE ---
   @Patch(':id')
+  @ApiOperation({ summary: 'Atualiza dados de uma manutenção' })
+  @ApiParam({ name: 'id', description: 'ID da manutenção a atualizar' })
+  @ApiResponse({ status: 200, description: 'Atualizado com sucesso.' })
   update(
-    @Param('id') id: string,
-    @Body() UpdateManutencaoDto: UpdateManutencaoDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateManutencaoDto: UpdateManutencaoDto,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-    return this.manutencaoService.update(+id, UpdateManutencaoDto);
+    return this.manutencaoService.update(id, updateManutencaoDto);
   }
 
-  // Excluir Manutenção
+  // --- DELETE ---
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-    return this.manutencaoService.remove(+id);
+  @ApiOperation({ summary: 'Remove uma manutenção do banco' })
+  @ApiParam({ name: 'id', description: 'ID da manutenção a remover' })
+  @ApiResponse({ status: 200, description: 'Removido com sucesso.' })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.manutencaoService.remove(id);
   }
 }

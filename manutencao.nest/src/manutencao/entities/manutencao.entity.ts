@@ -6,19 +6,21 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger'; // <--- Importante
 import { TipoSistema } from '../../tipo_sistema/entities/tipo_sistema.entity';
 import { TipoOperacao } from '../../tipo_operacao/entities/tipo_operacao.entity';
 import { TipoCriticidade } from '../../tipo_criticidade/entities/tipo_criticidade.entity';
 
 @Entity('manutencao')
 export class Manutencao {
+  @ApiProperty({ example: 1, description: 'Código único da manutenção' })
   @PrimaryGeneratedColumn('identity', { name: 'codigo' })
   codigo: number;
 
   // --- RELACIONAMENTOS ---
-
+  
   @ManyToOne(() => TipoSistema)
-  @JoinColumn({ name: 'tipo_sistema' }) // Nome da coluna no Banco de Dados
+  @JoinColumn({ name: 'tipo_sistema' })
   tipoSistema: TipoSistema;
 
   @ManyToOne(() => TipoOperacao)
@@ -29,23 +31,21 @@ export class Manutencao {
   @JoinColumn({ name: 'tipo_criticidade' })
   tipoCriticidade: TipoCriticidade;
 
-  @Column({
-    name: 'data_agendamento',
-    type: 'timestamp',
-    nullable: true,
-  })
+  // --- COLUNAS TABELAS MANUTENCAO ---
+
+  @ApiProperty({ example: '2024-02-10T14:00:00Z', description: 'Data agendada' })
+  @Column({ name: 'data_agendamento', type: 'timestamp', nullable: true })
   dataAgendamento: Date;
 
-  @Column({
-    name: 'data_finalizada',
-    type: 'timestamp',
-    nullable: true,
-  })
+  @ApiProperty({ example: null, description: 'Data de finalização (se houver)' })
+  @Column({ name: 'data_finalizada', type: 'timestamp', nullable: true })
   dataFinalizada: Date;
 
+  @ApiProperty({ example: '2024-02-01T10:00:00Z', description: 'Data de criação' })
   @CreateDateColumn({ name: 'data_cadastro', type: 'timestamptz' })
   dataCadastro: Date;
 
+  @ApiProperty({ example: 'Atualização', description: 'Descrição do serviço' })
   @Column({ type: 'text', nullable: true })
   descricao: string;
 }

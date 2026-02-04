@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Manutencao } from './entities/manutencao.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,57 +21,60 @@ export class ManutencaoService {
     });
 
     const salvo = await this.manutencaoRepository.save(novaManutencao);
+    // Retorna com os relacionamentos carregados
     return this.findOne(salvo.codigo);
   }
 
   findAll() {
     return this.manutencaoRepository.find({
       relations: ['tipoSistema', 'tipoOperacao', 'tipoCriticidade'],
+      order: { dataCadastro: 'DESC' },
     });
   }
 
-  findOne(id: number) {
-    return this.manutencaoRepository.findOne({
+  async findOne(id: number) {
+    const manutencao = await this.manutencaoRepository.findOne({
       where: { codigo: id },
       relations: ['tipoSistema', 'tipoOperacao', 'tipoCriticidade'],
     });
+
+    if (!manutencao) {
+        throw new NotFoundException(`Manutenção ID ${id} não encontrada`);
+    }
+    return manutencao;
   }
 
   async update(id: number, updateManutencaoDto: UpdateManutencaoDto) {
-    const dadosAtualizacao: any = { ...updateManutencaoDto };
+    // 1. Verifica se existe antes de tentar atualizar
+    await this.findOne(id);
 
-    if (updateManutencaoDto.tipoSistema) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      dadosAtualizacao.tipoSistema = {
-        codigo: updateManutencaoDto.tipoSistema,
-      };
-    }
-    if (updateManutencaoDto.tipoOperacao) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      dadosAtualizacao.tipoOperacao = {
-        codigo: updateManutencaoDto.tipoOperacao,
-      };
-    }
-    if (updateManutencaoDto.tipoCriticidade) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      dadosAtualizacao.tipoCriticidade = {
-        codigo: updateManutencaoDto.tipoCriticidade,
-      };
-    }
+    // 2. Montar o objeto de atualização de forma limpa
+    const updateData: Partial<Manutencao> = {
+        ...updateManutencaoDto,
+        // Só adiciona o objeto se o ID foi enviado
+        tipoSistema: updateManutencaoDto.tipoSistema ? { codigo: updateManutencaoDto.tipoSistema } as any : undefined,
+        tipoOperacao: updateManutencaoDto.tipoOperacao ? { codigo: updateManutencaoDto.tipoOperacao } as any : undefined,
+        tipoCriticidade: updateManutencaoDto.tipoCriticidade ? { codigo: updateManutencaoDto.tipoCriticidade } as any : undefined,
+    };
 
-    await this.manutencaoRepository.update(id, dadosAtualizacao);
+    // Remove campos undefined para não apagar dados acidentalmente
+    Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+
+    await this.manutencaoRepository.save({ codigo: id, ...updateData });
     return this.findOne(id);
   }
 
   async remove(id: number) {
-    await this.manutencaoRepository.delete(id);
+    const result = await this.manutencaoRepository.delete(id);
+    if (result.affected === 0) {
+        throw new NotFoundException(`Manutenção ID ${id} não encontrada para exclusão`);
+    }
     return { message: `Manutenção ${id} removida com sucesso` };
   }
 
-  // --- MÉTODOS EXTRAS (Relatórios) ---
+  // --- MÉTODOS EXTRAS ---
 
   async gerarRelatorio() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.manutencaoRepository.query(`
       SELECT 
           m.codigo,
@@ -91,7 +94,6 @@ export class ManutencaoService {
   }
 
   async contarPorSistema() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.manutencaoRepository.query(`
       SELECT 
         ts.nome, 
