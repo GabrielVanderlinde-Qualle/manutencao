@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TipoCriticidadeService } from './tipo_criticidade.service';
 import { CreateTipoCriticidadeDto } from './dto/create-tipo_criticidade.dto';
@@ -28,20 +29,21 @@ export class TipoCriticidadeController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tipoCriticidadeService.findOne(+id);
+  // ParseIntPipe garante que o ID seja um número válido antes de chamar o Service
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoCriticidadeService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTipoCriticidadeDto: UpdateTipoCriticidadeDto,
   ) {
-    return this.tipoCriticidadeService.update(+id, updateTipoCriticidadeDto);
+    return this.tipoCriticidadeService.update(id, updateTipoCriticidadeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tipoCriticidadeService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoCriticidadeService.remove(id);
   }
 }
