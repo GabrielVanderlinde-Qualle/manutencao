@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTipoSistemaDto } from './dto/create-tipo_sistema.dto';
 import { UpdateTipoSistemaDto } from './dto/update-tipo_sistema.dto';
-import { Repository } from 'typeorm';
 import { TipoSistema } from './entities/tipo_sistema.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TipoSistemaService {
@@ -12,27 +12,49 @@ export class TipoSistemaService {
     private tipoSistemaRepository: Repository<TipoSistema>,
   ) {}
 
-  create(createTipoSistemaDto: CreateTipoSistemaDto) {
+  // --- CREATE ---
+  async create(createTipoSistemaDto: CreateTipoSistemaDto) {
     return this.tipoSistemaRepository.save(createTipoSistemaDto);
   }
 
-  findAll() {
-    return this.tipoSistemaRepository.find();
+  // --- READ ---
+  async findAll() {
+    return this.tipoSistemaRepository.find({
+      order: { nome: 'ASC' },
+    });
   }
 
-  findOne(id: number) {
-    return this.tipoSistemaRepository.findOneBy({ codigo: id });
+  // --- BUSCA ID OU RETORNA ERRO --
+  async findOne(id: number) {
+    const sistema = await this.tipoSistemaRepository.findOneBy({ codigo: id });
+
+    if (!sistema) {
+      throw new NotFoundException(`Sistema com código ${id} não encontrado.`);
+    }
+
+    return sistema;
   }
 
-  // Atualiza no Banco de Dados
+  // --- UPDATE COM VERIFICAÇÃO ---
   async update(id: number, updateTipoSistemaDto: UpdateTipoSistemaDto) {
+    // 1. Garante que o sistema existe antes de atualizar
+    await this.findOne(id);
+
+    // 2. Realiza a atualização parcial
     await this.tipoSistemaRepository.update(id, updateTipoSistemaDto);
 
-    // 2. Busca o item atualizado para mostrar pro usuário
-    return `This action updates a #${id} tipoSistema`;
+    // 3. Retorna o dado atualizado para o front-end
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tipoSistema`;
+  // -- DELETE
+  async remove(id: number) {
+    const result = await this.tipoSistemaRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Sistema com código ${id} não encontrado para exclusão.`);
+    }
+
+    return { message: 'Removido com sucesso' };
   }
 }

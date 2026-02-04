@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TipoSistemaService } from './tipo_sistema.service';
 import { CreateTipoSistemaDto } from './dto/create-tipo_sistema.dto';
@@ -26,20 +27,21 @@ export class TipoSistemaController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tipoSistemaService.findOne(+id);
+  // ParseIntPipe garante que o ID recebido na URL é um número
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoSistemaService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTipoSistemaDto: UpdateTipoSistemaDto,
   ) {
-    return this.tipoSistemaService.update(+id, updateTipoSistemaDto);
+    return this.tipoSistemaService.update(id, updateTipoSistemaDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tipoSistemaService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoSistemaService.remove(id);
   }
 }

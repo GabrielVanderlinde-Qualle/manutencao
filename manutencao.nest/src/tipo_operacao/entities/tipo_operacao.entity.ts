@@ -5,9 +5,9 @@ export class TipoOperacao {
   @PrimaryGeneratedColumn('identity', { name: 'codigo' })
   codigo: number;
 
-  @Column({ length: 100, nullable: false })
+  @Column()
   nome: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column()
   descricao: string;
 }
