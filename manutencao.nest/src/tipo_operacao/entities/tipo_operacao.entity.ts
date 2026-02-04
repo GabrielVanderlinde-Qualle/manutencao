@@ -2,12 +2,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('tipo_operacao')
 export class TipoOperacao {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('identity', { name: 'codigo' })
   codigo: number;
 
-  @Column()
+  @Column({ length: 100, nullable: false })
   nome: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   descricao: string;
 }

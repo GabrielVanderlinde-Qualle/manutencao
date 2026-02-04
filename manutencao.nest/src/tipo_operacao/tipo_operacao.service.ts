@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTipoOperacaoDto } from './dto/create-tipo_operacao.dto';
 import { UpdateTipoOperacaoDto } from './dto/update-tipo_operacao.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TipoOperacao } from './entities/tipo_operacao.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class TipoOperacaoService {
@@ -12,28 +12,49 @@ export class TipoOperacaoService {
     private tipoOperacaoRepository: Repository<TipoOperacao>,
   ) {}
 
-  create(createTipoOperacaoDto: CreateTipoOperacaoDto) {
+  // --- CREATE ---
+  async create(createTipoOperacaoDto: CreateTipoOperacaoDto) {
     return this.tipoOperacaoRepository.save(createTipoOperacaoDto);
   }
 
-  findAll() {
-    return this.tipoOperacaoRepository.find();
+  // --- READ ---
+  async findAll() {
+    return this.tipoOperacaoRepository.find({
+      order: { nome: 'ASC' },
+    });
   }
 
-  findOne(id: number) {
-    return this.tipoOperacaoRepository.findOneBy({ codigo: id });
+  // --- BUSCA ID OU RETORNA ERRO --
+  async findOne(id: number) {
+    const operacao = await this.tipoOperacaoRepository.findOneBy({ codigo: id });
+
+    if (!operacao) {
+      throw new NotFoundException(`Tipo de Operação com código ${id} não encontrada.`);
+    }
+
+    return operacao;
   }
 
-  //Atualização no Banco de Dados
+    // --- UPDATE COM VERIFICAÇÃO ---
   async update(id: number, updateTipoOperacaoDto: UpdateTipoOperacaoDto) {
-    //Solicita atualização no Banco de Dados
+    // Garante que o registro existe antes de atualizar
+    await this.findOne(id);
+
+    // Executa a atualização
     await this.tipoOperacaoRepository.update(id, updateTipoOperacaoDto);
 
-    // Busca o item atualizado para mostrar o usuário
-    return this.tipoOperacaoRepository.findOneBy({ codigo: id });
+    // Retorna o objeto atualizado
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tipoOperacao`;
+  // -- DELETE
+  async remove(id: number) {
+    const result = await this.tipoOperacaoRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tipo de Operação com código ${id} não encontrada para exclusão.`);
+    }
+
+    return { message: 'Removido com sucesso' };
   }
 }

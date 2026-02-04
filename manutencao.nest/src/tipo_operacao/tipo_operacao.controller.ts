@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TipoOperacaoService } from './tipo_operacao.service';
 import { CreateTipoOperacaoDto } from './dto/create-tipo_operacao.dto';
@@ -26,20 +27,21 @@ export class TipoOperacaoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tipoOperacaoService.findOne(+id);
+  // ParseIntPipe protege a rota contra valores não numéricos (ex: /tipo-operacao/abc)
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoOperacaoService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateTipoOperacaoDto: UpdateTipoOperacaoDto,
   ) {
-    return this.tipoOperacaoService.update(+id, updateTipoOperacaoDto);
+    return this.tipoOperacaoService.update(id, updateTipoOperacaoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tipoOperacaoService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.tipoOperacaoService.remove(id);
   }
 }
