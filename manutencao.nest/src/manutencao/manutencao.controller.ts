@@ -7,7 +7,7 @@ import { ManutencaoService } from './manutencao.service';
 
 @ApiTags('Manutenção') // Agrupa as rotas no Swagger
 @Controller({
-  path: 'tipo-manutencao',
+  path: 'manutencao',
   version: '1',
 })
 export class ManutencaoController {
