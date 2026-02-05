@@ -6,7 +6,10 @@ import { TipoSistema } from './entities/tipo_sistema.entity';
 import { TipoSistemaService } from './tipo_sistema.service';
 
 @ApiTags('Tipo Sistema') // <--- Agrupa na UI
-@Controller('tipo-sistema')
+@Controller({
+  path: 'tipo-sistema',
+  version: '1',
+})
 export class TipoSistemaController {
   constructor(private readonly tipoSistemaService: TipoSistemaService) {}
 

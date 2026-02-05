@@ -6,7 +6,10 @@ import { Manutencao } from './entities/manutencao.entity';
 import { ManutencaoService } from './manutencao.service';
 
 @ApiTags('Manutenção') // Agrupa as rotas no Swagger
-@Controller('manutencao')
+@Controller({
+  path: 'tipo-manutencao',
+  version: '1',
+})
 export class ManutencaoController {
   constructor(private readonly manutencaoService: ManutencaoService) {}
 

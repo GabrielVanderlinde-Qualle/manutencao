@@ -6,7 +6,10 @@ import { TipoOperacao } from './entities/tipo_operacao.entity';
 import { TipoOperacaoService } from './tipo_operacao.service';
 
 @ApiTags('Tipo Operação') // <--- Agrupa na UI do Swagger
-@Controller('tipo-operacao')
+@Controller({
+  path: 'tipo-operacao',
+  version: '1',
+})
 export class TipoOperacaoController {
   constructor(private readonly tipoOperacaoService: TipoOperacaoService) {}
 
