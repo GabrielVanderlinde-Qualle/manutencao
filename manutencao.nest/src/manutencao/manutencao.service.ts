@@ -45,35 +45,44 @@ export class ManutencaoService {
   }
 
   async update(id: number, updateManutencaoDto: UpdateManutencaoDto) {
-    // 1. Verifica se existe antes de tentar atualizar
     await this.findOne(id);
 
-    // 2. Montar o objeto de atualização de forma limpa
-    const updateData: Partial<Manutencao> = {
-      ...updateManutencaoDto,
-      // Só adiciona o objeto se o ID foi enviado
-      tipoSistema: updateManutencaoDto.tipoSistema
-        ? ({ codigo: updateManutencaoDto.tipoSistema } as any)
-        : undefined,
-      tipoOperacao: updateManutencaoDto.tipoOperacao
-        ? ({ codigo: updateManutencaoDto.tipoOperacao } as any)
-        : undefined,
-      tipoCriticidade: updateManutencaoDto.tipoCriticidade
-        ? ({ codigo: updateManutencaoDto.tipoCriticidade } as any)
-        : undefined,
-    };
+    const dadosParaAtualizar: any = {};
 
-    // Remove campos undefined para não apagar dados acidentalmente
-    Object.keys(updateData).forEach((key) => {
-      if (updateData[key] === undefined) delete updateData[key];
-    });
+    if (updateManutencaoDto.descricao !== undefined) {
+      dadosParaAtualizar.descricao = updateManutencaoDto.descricao;
+    }
 
-    await this.manutencaoRepository.save({ codigo: id, ...updateData });
+    if (updateManutencaoDto.dataAgendamento !== undefined) {
+      dadosParaAtualizar.dataAgendamento = updateManutencaoDto.dataAgendamento;
+    }
+
+    if (updateManutencaoDto.dataFinalizada !== undefined) {
+      dadosParaAtualizar.dataFinalizada = updateManutencaoDto.dataFinalizada;
+    }
+
+    if (updateManutencaoDto.tipoSistema !== undefined) {
+      dadosParaAtualizar.tipoSistema = { codigo: updateManutencaoDto.tipoSistema };
+    }
+
+    if (updateManutencaoDto.tipoOperacao !== undefined) {
+      dadosParaAtualizar.tipoOperacao = { codigo: updateManutencaoDto.tipoOperacao };
+    }
+
+    if (updateManutencaoDto.tipoCriticidade !== undefined) {
+      dadosParaAtualizar.tipoCriticidade = { codigo: updateManutencaoDto.tipoCriticidade };
+    }
+
+    dadosParaAtualizar.codigo = id;
+
+    await this.manutencaoRepository.save(dadosParaAtualizar);
+
     return this.findOne(id);
   }
 
   async remove(id: number) {
     const result = await this.manutencaoRepository.delete(id);
+    //(zero linhas afetadas), significa que o ID não existia.
     if (result.affected === 0) {
       throw new NotFoundException(`Manutenção ID ${id} não encontrada para exclusão`);
     }
