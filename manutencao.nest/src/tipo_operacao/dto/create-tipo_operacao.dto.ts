@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateTipoOperacaoDto {
   @ApiProperty({
@@ -8,6 +8,7 @@ export class CreateTipoOperacaoDto {
   })
   @IsString({ message: 'O nome deve ser um texto.' })
   @IsNotEmpty({ message: 'O nome da operação é obrigatório.' })
+  @MaxLength(25, {message: 'O tipo de Operação deve ter no Máximo 25 Caracteres'})
   nome: string;
 
   @ApiProperty({
@@ -16,6 +17,6 @@ export class CreateTipoOperacaoDto {
     required: false, // Indica no Swagger que não é obrigatório
   })
   @IsOptional()
-  @IsString()
-  descricao: string;
+  @IsString({message: 'A descrição deve ser um texto'})
+  descricao?: string;
 }

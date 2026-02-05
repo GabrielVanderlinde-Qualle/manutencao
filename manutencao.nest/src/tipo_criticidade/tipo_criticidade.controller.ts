@@ -24,7 +24,7 @@ export class TipoCriticidadeController {
     return this.tipoCriticidadeService.findAll();
   }
 
-  @ApiOperation({ summary: 'Busca uma criticidade pelo ID' }) // <--- Texto corrigido
+  @ApiOperation({ summary: 'Busca uma criticidade pelo ID' })
   @ApiResponse({ status: 200, type: TipoCriticidade })
   @ApiResponse({ status: 404, description: 'Não encontrado' })
   @Get(':id')

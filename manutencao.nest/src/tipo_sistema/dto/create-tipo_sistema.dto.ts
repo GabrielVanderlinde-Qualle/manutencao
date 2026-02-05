@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateTipoSistemaDto {
   @ApiProperty({
@@ -8,6 +8,7 @@ export class CreateTipoSistemaDto {
   })
   @IsString({ message: 'O nome deve ser um texto.' })
   @IsNotEmpty({ message: 'O nome do sistema é obrigatório.' })
+  @MaxLength(25, {message: 'O nome do Sistema deve ter no Máximo 25 Caracteres'})
   nome: string;
 
   @ApiProperty({
@@ -15,7 +16,7 @@ export class CreateTipoSistemaDto {
     description: 'Breve descrição técnica',
     required: false, // Indica no Swagger que não é obrigatório
   })
-  @IsOptional() // Permite que o campo seja nulo ou indefinido
-  @IsString()
+  @IsOptional({message: 'Pode ser nulo ou indefinido'}) // Permite que o campo seja nulo ou indefinido
+  @IsString({message: 'A descrição deve ser um texto'})
   descricao?: string;
 }

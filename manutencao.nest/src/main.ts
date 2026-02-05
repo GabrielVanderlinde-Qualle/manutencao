@@ -17,6 +17,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
+  // --- VALIDAÇÃO ---
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true, // Transforma o JSON recebido nos tipos do DTO automaticamente

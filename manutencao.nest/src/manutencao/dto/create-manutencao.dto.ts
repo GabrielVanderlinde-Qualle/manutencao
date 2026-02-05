@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class CreateManutencaoDto {
   // --- DESCRIÇÃO --
@@ -8,7 +8,7 @@ export class CreateManutencaoDto {
     example: 'Implementar Funcionalidade',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'A descrição da manutenção é obrigatória.' })
   descricao: string;
 
   // --- TIPO SISTEMA --
@@ -16,7 +16,8 @@ export class CreateManutencaoDto {
     description: 'ID do Sistema (Ex: 1 para Alerta Sul, 2 para Defesa Civil)',
     example: 1,
   })
-  @IsInt()
+  @IsInt({ message: 'O tipo de sistema deve ser um numero inteiro' })
+  @IsPositive({ message: 'O ID deve ser um número positivo' })
   tipoSistema: number;
 
   // --- TIPO OPERAÇÃO --
@@ -24,7 +25,8 @@ export class CreateManutencaoDto {
     description: 'ID do Tipo de Operação (Ex: 1 Preventiva, 2 Agendada)',
     example: 2,
   })
-  @IsInt()
+  @IsInt({ message: 'O tipo de operação deve ser um numero inteiro' })
+  @IsPositive({ message: 'O ID deve ser um número positivo' })
   tipoOperacao: number;
 
   // --- TIPO CRITICIDADE --
@@ -32,7 +34,8 @@ export class CreateManutencaoDto {
     description: 'ID da Criticidade (Ex: 1 Baixa, 3 Alta)',
     example: 3,
   })
-  @IsInt()
+  @IsInt({ message: 'O tipo de criticidade deve ser um numero inteiro' })
+  @IsPositive({ message: 'O ID deve ser um número positivo' })
   tipoCriticidade: number;
 
   // --- DATA AGENDAMENTO --
@@ -42,7 +45,7 @@ export class CreateManutencaoDto {
   })
   @IsOptional()
   @IsDateString()
-  dataAgendamento?: Date;
+  dataAgendamento?: string;
 
   // --- DATA FINALIZADA --
   @ApiPropertyOptional({
@@ -51,5 +54,5 @@ export class CreateManutencaoDto {
   })
   @IsOptional()
   @IsDateString()
-  dataFinalizada?: Date;
+  dataFinalizada?: string;
 }
