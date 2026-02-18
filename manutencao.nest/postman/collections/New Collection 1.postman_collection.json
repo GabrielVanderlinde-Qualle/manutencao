@@ -1,0 +1,226 @@
+{
+  "info": {
+    "_postman_id": "92607233-bf22-49f3-bb8f-efb35dd1ea87",
+    "name": "Produtos API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "CRUD",
+      "item": [
+        {
+          "name": "Create",
+          "id": "2f347729-45ad-48e9-a04c-9872bd12e0f2",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Teclado\",\r\n    \"descricao\": \"RedDragon\",\r\n    \"preco\": 50.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read By Id",
+          "id": "40fd790d-867d-4bb1-a8cc-457110d1f2a2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}/:id",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "25f66c80-313e-4ecb-b6d2-c163d5a45131"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read All",
+          "id": "651fc178-ea15-45ae-8738-951145f7c302",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}/read-all",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ],
+              "path": [
+                "read-all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read By Name",
+          "id": "483b2760-419c-4db1-a93c-ec9403e0a67e",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}?nome=Teclado",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "Teclado",
+                  "uuid": "f72a858e-0242-42f6-a271-8521a8684710"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "id": "f260e7f1-841e-4fe9-a661-c02e5c7e3ed7",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Teclado Atualizado\",\r\n    \"descricao\": \"RedDragon\",\r\n    \"preco\": 50.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}/:id",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "52f892bc-695d-4c35-a577-1372af5143d5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "id": "017a79cb-a00a-4f1c-b6ad-2746e165b3a0",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - PRODUTOS}}/:id",
+              "host": [
+                "{{URL - PRODUTOS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "25f66c80-313e-4ecb-b6d2-c163d5a45131"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "3dd764ea-1495-475b-a3e6-e583761aa706"
+    },
+    {
+      "name": "DATABASE",
+      "item": [
+        {
+          "name": "DATABASE",
+          "id": "c7dea3fb-9f09-4123-96da-72958fb77383",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL - DATABASE}}",
+              "host": [
+                "{{URL - DATABASE}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "ca7f8025-c346-4cc2-b0a7-7f495a8c3fe2"
+    }
+  ]
+}
